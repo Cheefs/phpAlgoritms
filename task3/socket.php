@@ -8,29 +8,25 @@ error_reporting($oldErrorReporting ^ E_WARNING); // disable warnings
 $message = null;
 
 while (true) {
-    $acceptSocket = stream_socket_accept($conn, 1);
-    socket_set_blocking($acceptSocket,0);
-
+    $acceptSocket = stream_socket_accept($conn, 0);
     if ($acceptSocket) {
         $server_response = fread($acceptSocket, 4096);
-        $pkt = stream_socket_recvfrom($acceptSocket, 1500, 0, $peer);
-
-        if (false === empty($pkt)) {
-            stream_socket_sendto($acceptSocket, $queue->dequeue(), 0, $peer);
+        if ($server_response) {
+            stream_socket_sendto($acceptSocket, $queue->dequeue());
+            print_r($queue);
         }
     } else {
-        if (trim($message) != 'q' && is_null($message)) {
+        if (is_null($message)) {
             echo 'Enter message, оr enter "q" to stop proces : ';
             stream_set_blocking(STDIN, 0);
             $message = fgets(STDIN);
-
-            if (trim($message) != '' && !is_null($message)) {
+            if (trim($message) != '' && trim($message) != 'q') {
                 $queue->enqueue($message);
                 $message = null;
                 continue;
+            } elseif(trim($message) != 'q') {
+                fclose(STDIN);
             }
-        } elseif(trim($message) != 'q') {
-            fclose(STDIN);
         }
     }
     fclose($acceptSocket);

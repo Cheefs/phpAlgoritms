@@ -11,7 +11,6 @@
         }
         stream_socket_shutdown($socket, STREAM_SHUT_RDWR);
     }
-
 ?>
 
 <h3><?= $server_response ?></h3>
