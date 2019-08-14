@@ -28,7 +28,7 @@ $prices = [
     ]
 ];
 
-for($i = 0; $i < 1000; $i++) {
+for($i = 0; $i < 100; $i++) {
     $prices[] = [
         'price' =>  rand(0, 10000),
         'shop_name' => 'Shop '.rand(1, 10),
@@ -86,7 +86,7 @@ function ShellSort($elements) {
     return $elements;
 }
 var_dump(ShellSort($prices));
-
+echo '<hr/>';
 /**
  * 3. *Реализовать функционал сортировки слиянием.
  * Изучал много реализаций алгоритма, и попытался воспроизвести наиболее коротко, надеюсь не потерял смысл
@@ -132,13 +132,18 @@ function merge(array $left, array $right) {
     return $result;
 }
 
+/**
+ * Вынес повторяющийся функционал, чтоб не слишком дублировать код
+ * @param $arr
+ * @param $replacement
+ */
 function splice(&$arr, $replacement) {
     array_splice($arr, count($arr), 0, $replacement);
 }
 
 $testArr = [];
-for($i = 0; $i < 1000; $i++) {
+for($i = 0; $i < 100; $i++) {
     $testArr[] = rand(0, 10000);
 }
 
-var_dump(mergeSort($prices));
+var_dump(mergeSort($testArr));
