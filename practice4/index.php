@@ -32,6 +32,10 @@ class MathTree {
     private $operators = ['+', '-', '*', '/', '^'];
     private $value = 0;
 
+    public function getTree() {
+        return $this->tree;
+    }
+
     private $priority = [
         '^' => 5,
         '*' => 4,
@@ -103,9 +107,9 @@ class MathTree {
         return $minSymbol;
     }
 
-    public function printTree() {
-         $this->render($str, $this->tree);
-        return '<ul>'. $str . '</ul>';
+    public function printTree($tree) {
+        $str = $this->render($tree);
+        return  $str ;
     }
 
     /**
@@ -114,37 +118,26 @@ class MathTree {
      * @param $str
      * @return string
      */
-    private function render(&$str, $tree) {
+    private function render($tree) {
+        $str = '';
         if ( $tree ) {
-            $str .= '<li>'. $tree->value;
-            $this->getFullBranch( $str, $tree->left);
-            $this->getFullBranch($str, $tree->right);
+            $str = '<ul style="list-style-type: none;"><li>';
+            if (!is_null($tree->right)) {
+                $str .= $this->printTree($tree->right);
+            }
+            if ($tree->value) {
+                $str .= $tree->value;
+            }
 
-            $str .='</li>';
+            if (!is_null($tree->left)) {
+                $str .= $this->printTree($tree->left);
+            }
+            
+            $str .= '</li></ul>';
         }
         return $str;
     }
 
-    private function getFullBranch(&$str, $branch) {
-        $str .= '<ul>';
-
-        echo '<hr>';
-        if ($branch) {
-            $str .= '<li>'. $branch->value;
-            if (!is_null($branch->left)) {
-                $this->getFullBranch($str, $branch->left);
-            }
-
-            if (!is_null($branch->rigth)) {
-                $this->getFullBranch($str, $branch->rigth);
-            }
-
-            $str .='</li>';
-        }
-
-        $str .= '</ul>';
-        return $str;
-    }
 
     /**
      *  ФУНКЦИЯ НЕ ДОРАБОТАННА, ЕЩЕ НЕ РЕАЛИЗОВАН ПОДСЧЕТ
@@ -214,4 +207,4 @@ class MathTree {
 
 $myTree = new MathTree($str);
 
-echo $myTree->printTree();
+echo $myTree->printTree($myTree->getTree());
